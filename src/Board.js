@@ -79,12 +79,39 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+
+      var alreadyFound = false;
+      var rowConflictFound = false;
+      var currentRow = this.get(rowIndex);
+
+      // iterate over the array that represents the row
+      for (var i = 0; i < currentRow.length; i++) {
+        // if there is a given piece on there
+        if (currentRow[i] === 1) {
+          // and a piece was already found in this row, report the conflict
+          if (alreadyFound) {
+            rowConflictFound = true;
+          }
+          alreadyFound = true;
+        }
+      }
+
+      return rowConflictFound;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var numCols = this.get('n');
+      var rowConflictFound = false;
+
+      // passes in each row of the board into hasRowConflictAt
+      for (var i = 0; i < numCols; i++) {
+        if (this.hasRowConflictAt(i)) {
+          rowConflictFound = true;
+        }
+      }
+
+      return rowConflictFound; // fixme
     },
 
 
@@ -94,12 +121,43 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var numRows = this.get('n');
+      var alreadyFound = false;
+      var colConflictFound = false;
+      var currentRow;
+
+      // iterates over the rows
+      for (var i = 0; i < numRows; i++) {
+        // looks at current row
+        currentRow = this.get(i);
+        // if the given column has more than one piece, report a conflict was found
+        if (currentRow[colIndex] === 1) {
+          if (alreadyFound) {
+            colConflictFound = true;
+          }
+          alreadyFound = true;
+        }
+      }
+
+      return colConflictFound;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+
+    // get number of columns
+    var numColumns = this.get('n');
+    var colConflictFound = false;
+
+    // iterate over columns
+    for (var i = 0; i < numColumns; i++){
+      if (this.hasColConflictAt(i)) {
+        colConflictFound = true;
+      }
+    }
+      // send each col index into hasConflictAt
+
+      return colConflictFound; // fixme
     },
 
 
@@ -108,13 +166,78 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(pieceRow, pieceColumn) {
+      var numRows = this.get('n');
+      var conflictFound = false;
+      // holds the current row in the iteration loop
+      var currentRow;
+      var columnToCheck;
+      var pieceColumn;
+
+      // finds the absolute value between two given numbers
+      var findDifference = function(a, b){
+        return Math.abs(a-b);
+      };
+
+      for (var i = 0; i < numRows; i++) {
+
+        currentRow = this.get(i);
+
+        // calculates the difference between the original piece's column, and the column
+        // that a potential conflict piece is on
+        columnToCheck = findDifference(pieceRow, i);
+
+        // debugger;
+
+        if (i === pieceRow) {
+          continue;
+        }
+        // if the current row is before pieceRow
+        if (currentRow < pieceRow) {
+          // col to check is pieceColumn - findDiff
+          columnToCheck = pieceColumn - findDifference(pieceRow, currentRow);
+        }
+        if (currentRow > pieceRow) {
+          // col to check is pieceColumn + findDiff
+          columnToCheck = pieceColumn + findDifference(pieceRow, currentRow);
+            // note: might return undefined for possible error
+        }
+
+        if (currentRow[columnToCheck] === 1) {
+          return true;
+        }
+      }
+
+      // debugger;
+      return false;
+
+      // return conflictFound;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var conflictFound = false;
+      var numRows = this.get('n');
+      var currentRow;
+
+      // look over the rows with a double for loop for any  (possible constant time access here later)
+      for (var i = 0; i < numRows; i++){
+        // look at the current row
+        currentRow = this.get(i);
+        // check each column
+        for (var j=0; j < currentRow.length; j++) {
+          // if there is a piece
+          if (currentRow[j] === 1){
+            // check to see if it has any diagnol conflicts
+            // by passing in row and column and row of the found piece
+            if (this.hasMajorDiagonalConflictAt(i, j)) {
+              conflictFound = true;
+            }
+          }
+        }
+      }
+
+      return conflictFound;
     },
 
 
@@ -124,12 +247,13 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+      return true; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      return true; // fixme
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
