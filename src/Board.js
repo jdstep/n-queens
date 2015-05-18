@@ -168,11 +168,11 @@
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(pieceRow, pieceColumn) {
       var numRows = this.get('n');
-      var conflictFound = false;
       // holds the current row in the iteration loop
       var currentRow;
       var columnToCheck;
       var pieceColumn;
+      var columnDifference;
 
       // finds the absolute value between two given numbers
       var findDifference = function(a, b){
@@ -185,26 +185,30 @@
 
         // calculates the difference between the original piece's column, and the column
         // that a potential conflict piece is on
-        columnToCheck = findDifference(pieceRow, i);
+        columnDifference = findDifference(pieceRow, i);
 
         // debugger;
 
         if (i === pieceRow) {
           continue;
         }
-        // if the current row is before pieceRow
-        if (currentRow < pieceRow) {
+
+        // if the current row is above pieceRow
+        if (i < pieceRow) {
           // col to check is pieceColumn - findDiff
-          columnToCheck = pieceColumn - findDifference(pieceRow, currentRow);
+          columnToCheck = pieceColumn - columnDifference;
         }
-        if (currentRow > pieceRow) {
+
+        if (i > pieceRow) {
           // col to check is pieceColumn + findDiff
-          columnToCheck = pieceColumn + findDifference(pieceRow, currentRow);
+          columnToCheck = pieceColumn + columnDifference;
             // note: might return undefined for possible error
         }
 
         if (currentRow[columnToCheck] === 1) {
           return true;
+        } else {
+          // debugger;
         }
       }
 
@@ -246,14 +250,81 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+    hasMinorDiagonalConflictAt: function(pieceRow, pieceColumn) {
 
-      return true; // fixme
+      var numRows = this.get('n');
+      // holds the current row in the iteration loop
+      var currentRow;
+      var columnToCheck;
+      var pieceColumn;
+      var columnDifference;
+
+      // finds the absolute value between two given numbers
+      var findDifference = function(a, b){
+        return Math.abs(a-b);
+      };
+
+      for (var i = 0; i < numRows; i++) {
+
+        currentRow = this.get(i);
+
+        // calculates the difference between the original piece's column, and the column
+        // that a potential conflict piece is on
+        columnDifference = findDifference(pieceRow, i);
+
+        // debugger;
+
+        if (i === pieceRow) {
+          continue;
+        }
+
+        // if the current row is above pieceRow
+        if (i < pieceRow) {
+          // col to check is pieceColumn - findDiff
+          columnToCheck = pieceColumn + columnDifference;
+        }
+
+        if (i > pieceRow) {
+          // col to check is pieceColumn + findDiff
+          columnToCheck = pieceColumn - columnDifference;
+            // note: might return undefined for possible error
+        }
+
+        if (currentRow[columnToCheck] === 1) {
+          return true;
+        } else {
+          // debugger;
+        }
+      }
+
+      // debugger;
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return true; // fixme
+      var conflictFound = false;
+      var numRows = this.get('n');
+      var currentRow;
+
+      // look over the rows with a double for loop for any  (possible constant time access here later)
+      for (var i = 0; i < numRows; i++){
+        // look at the current row
+        currentRow = this.get(i);
+        // check each column
+        for (var j=0; j < currentRow.length; j++) {
+          // if there is a piece
+          if (currentRow[j] === 1){
+            // check to see if it has any diagnol conflicts
+            // by passing in row and column and row of the found piece
+            if (this.hasMinorDiagonalConflictAt(i, j)) {
+              conflictFound = true;
+            }
+          }
+        }
+      }
+
+      return conflictFound;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
