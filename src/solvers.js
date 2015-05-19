@@ -70,7 +70,71 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0; //fixme
+
+  // for now, store an array of each row and column that has been tried
+  // on each row, check if the current value has already been implemented with the current previous rows
+  //   WHILE CHECKING FOR CONFLICTS
+  //    how to end the checks? some sort of null or undefined?
+  // pass in the data object containing what was already tried into find n rooks solution (add parameters)
+
+  // generate all possible boards, then check which ones pass?
+
+  var solution = new Board({n: n});
+
+
+  var rookConflicts = function(rowIndex, columnIndex) {
+    solution.togglePiece(rowIndex, columnIndex);
+
+    if (solution.hasAnyRowConflicts() ||
+        solution.hasAnyColConflicts()) {
+      solution.togglePiece(rowIndex, columnIndex);
+      return true;
+    } else {
+      solution.togglePiece(rowIndex, columnIndex);
+      return false;
+    }
+  };
+
+
+  // recursive solution
+  // if we hit the end of a row, we have all of the possible solutions for the row state above the current row
+  // work from the bottom up, stepping towards the end of the row
+  // separate the problem into smaller pieces after creating the diagonal solution
+
+  var workingBoard = new Board(findNRooksSolution(n));
+
+
+  var makeBoard = function(row, column){
+    // broken, probably increments count when off the board
+    if ( solution.hasAnyRowConflicts() === false &&
+          solution.hasAnyColConflicts() === false) {
+      solutionCount++;
+    }
+
+    if (column === n) {
+      row++;
+      column = 0;
+    }
+    if (row === n) {
+
+    }
+    if (rookConflicts(row, column) === false) {
+      solution.togglePiece(row, column);
+    }
+  };
+
+
+  // clears all rows below current row
+  var clearLowerRows = function(currentRow) {
+    for (var i = currentRow; i < n; i++) {
+      for (var j = 0; j < currentRow.length; j++) {
+        if (solution.get(i)[j] === 1) {
+          solution.togglePiece(i, j);
+        }
+      }
+    }
+  };
 
 
 
