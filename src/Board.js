@@ -283,7 +283,7 @@
           // col to check is pieceColumn - findDiff
           columnToCheck = pieceColumn + columnDifference;
         }
-
+        // if the current row is below pieceRow
         if (i > pieceRow) {
           // col to check is pieceColumn + findDiff
           columnToCheck = pieceColumn - columnDifference;
