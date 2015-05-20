@@ -78,6 +78,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
+    // linear time with respect to the length of the row
     hasRowConflictAt: function(rowIndex) {
 
       var alreadyFound = false;
@@ -100,6 +101,7 @@
     },
 
     // test if any rows on this board contain conflicts
+    // n^2 time with respect to length of board
     hasAnyRowConflicts: function() {
       var numCols = this.get('n');
       var rowConflictFound = false;
@@ -111,7 +113,7 @@
         }
       }
 
-      return rowConflictFound; // fixme
+      return rowConflictFound;
     },
 
 
@@ -120,6 +122,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+    // linear with respect to length of board
     hasColConflictAt: function(colIndex) {
       var numRows = this.get('n');
       var alreadyFound = false;
@@ -143,6 +146,7 @@
     },
 
     // test if any columns on this board contain conflicts
+    // linear with respect to length of board
     hasAnyColConflicts: function() {
 
     // get number of columns
@@ -155,9 +159,8 @@
         colConflictFound = true;
       }
     }
-      // send each col index into hasConflictAt
 
-      return colConflictFound; // fixme
+      return colConflictFound;
     },
 
 
@@ -187,8 +190,6 @@
         // that a potential conflict piece is on
         columnDifference = findDifference(pieceRow, i);
 
-        // debugger;
-
         if (i === pieceRow) {
           continue;
         }
@@ -207,18 +208,15 @@
 
         if (currentRow[columnToCheck] === 1) {
           return true;
-        } else {
-          // debugger;
         }
+
       }
 
-      // debugger;
       return false;
-
-      // return conflictFound;
     },
 
     // test if any major diagonals on this board contain conflicts
+    // n^2 with respect to length of board
     hasAnyMajorDiagonalConflicts: function() {
       var conflictFound = false;
       var numRows = this.get('n');
@@ -250,6 +248,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
+    // linear with respect to length of board
     hasMinorDiagonalConflictAt: function(pieceRow, pieceColumn) {
 
       var numRows = this.get('n');
@@ -292,16 +291,14 @@
 
         if (currentRow[columnToCheck] === 1) {
           return true;
-        } else {
-          // debugger;
         }
       }
 
-      // debugger;
       return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
+    // n^2 time with respect to the length of the board
     hasAnyMinorDiagonalConflicts: function() {
       var conflictFound = false;
       var numRows = this.get('n');
